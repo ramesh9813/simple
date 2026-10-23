@@ -180,7 +180,7 @@ img {
   }
 
   return (
-    <div className={`app-shell${sidebarOpen ? '' : ' is-collapsed'}`}>
+    <div className={`app-shell${sidebarOpen ? ' is-sidebar-open' : ' is-collapsed'}`}>
       {sidebarOpen && (
         <Sidebar
           folders={folders}

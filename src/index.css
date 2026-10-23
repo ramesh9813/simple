@@ -1223,6 +1223,12 @@ body {
     font-size: 0.78rem;
   }
 
+  .app-shell.is-sidebar-open .editor-toolbar,
+  .app-shell.is-sidebar-open #status {
+    opacity: 0;
+    pointer-events: none;
+  }
+
   #main::before {
     content: '';
     position: absolute;
@@ -1298,6 +1304,7 @@ body {
       calc(0.6rem + env(safe-area-inset-bottom))
       calc(1.1rem + env(safe-area-inset-left));
     font-size: 0.66rem;
+    transition: opacity 160ms ease;
   }
 
   #status button {
