@@ -2,6 +2,8 @@
 
 A distraction-free writing editor built with React and Vite. A file tree takes the left 25% of the window, and the remaining 75% is the writing surface.
 
+**Live app:** https://quillry.onrender.com
+
 ## Features
 
 - Multi-file workspace with folders and nested folders
@@ -48,7 +50,7 @@ After installation, sharing text or a link from another Android app lists **Edit
 ├── package.json
 ├── vite.config.js
 ├── public/
-│   ├── manifest.webmanifest
+│   ├── manifest.json
 │   ├── sw.js
 │   └── icons/
 └── src/
