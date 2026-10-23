@@ -1,6 +1,6 @@
 # Editor
 
-A distraction-free writing editor built with React and Vite. A file tree takes the left 25% of the window, and the remaining 75% is the writing surface.
+A distraction-free writing editor built with React and Vite. On desktop, a file tree takes the left 25% of the window and the remaining 75% is the writing surface. On mobile, the editor is full-width and the file tree opens as a slide-in drawer.
 
 **Live app:** https://quillry.onrender.com
 
@@ -22,7 +22,7 @@ A distraction-free writing editor built with React and Vite. A file tree takes t
 - Installable PWA: use Chrome's Install app action on Android to launch it standalone
 - Android share target: share text or a link from any app and it is saved as one note in the Shared folder, with the source website included
 - Light and dark theme
-- Responsive layout for smaller screens
+- Mobile layout: full-width editor and a slide-in workspace drawer with larger touch targets and safe-area support
 - Print-friendly styles
 
 ## Quick start
@@ -38,14 +38,17 @@ npm run preview
 
 ## Install on Android
 
-Open the app over HTTPS in Chrome (or `localhost` while testing), then use Chrome's menu and choose **Install app** (or **Add to Home screen**). A plain `http://` address on your LAN is not a secure context, so Chrome will not offer installation there.
+Open the app over HTTPS in Chrome (or `localhost` while testing), then use Chrome's menu and choose **Install app**. A plain `http://` address on your LAN is not a secure context, so Chrome will not offer installation there. A shortcut created by **Add to Home screen** may not register as a share target.
 
 After installation, sharing text or a link from another Android app lists **Editor** in the share sheet. Each share creates one file in the root **Shared** folder and opens it; shared links are shown as the source website.
+
+The share target accepts text and links, not document attachments. See [Android installation and sharing](ANDROID.md) for reinstall steps, share-sheet troubleshooting, and the current file-sharing limitation.
 
 ## Project structure
 
 ```
 .
+├── ANDROID.md
 ├── index.html
 ├── package.json
 ├── vite.config.js
@@ -58,6 +61,7 @@ After installation, sharing text or a link from another Android app lists **Edit
     ├── App.jsx
     ├── components/
     │   ├── Editor.jsx
+    │   ├── PanelIcon.jsx
     │   ├── Sidebar.jsx
     │   └── StatusBar.jsx
     ├── hooks/
@@ -71,3 +75,7 @@ After installation, sharing text or a link from another Android app lists **Edit
 ## Storage
 
 Folders and files are stored locally in your browser only, under the localStorage keys `simple-editor-workspace` and `simple-editor-active`. Workspace data is version 2 and stores each document as HTML. Nothing is uploaded or sent anywhere. Legacy plain-text documents and the old flat file list are converted to HTML and migrated automatically.
+
+## Deployment
+
+The public repository is [ramesh9813/simple](https://github.com/ramesh9813/simple). Render deploys the `main` branch as a static site using `npm ci && npm run build` and publishes the `dist/` directory.
