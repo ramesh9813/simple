@@ -8,6 +8,7 @@ import { escapeHtml, htmlToText, isHtmlEmpty } from './utils/html.js';
 import { clearShareUrl, consumeSharedContent } from './utils/share.js';
 
 const SIDEBAR_KEY = 'simple-editor-sidebar-open';
+const MOBILE_QUERY = '(max-width: 860px)';
 
 export default function App() {
   const {
@@ -30,7 +31,9 @@ export default function App() {
   const sharedImportStarted = useRef(false);
   const [sidebarOpen, setSidebarOpen] = useState(() => {
     try {
-      return localStorage.getItem(SIDEBAR_KEY) !== 'false';
+      const saved = localStorage.getItem(SIDEBAR_KEY);
+      if (saved !== null) return saved !== 'false';
+      return !window.matchMedia(MOBILE_QUERY).matches;
     } catch {
       return true;
     }
@@ -62,7 +65,7 @@ export default function App() {
 
       try {
         importShared(payload);
-        setSidebarOpen(true);
+        setSidebarOpen(!window.matchMedia(MOBILE_QUERY).matches);
       } catch (error) {
         console.error('Could not import shared content', error);
       }
@@ -74,6 +77,19 @@ export default function App() {
   useEffect(() => {
     editorRef.current?.focus();
   }, [activeFile.id]);
+
+  useEffect(() => {
+    if (!sidebarOpen) return;
+
+    function handleEscape(e) {
+      if (e.key === 'Escape' && window.matchMedia(MOBILE_QUERY).matches) {
+        setSidebarOpen(false);
+      }
+    }
+
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [sidebarOpen]);
 
   const plainText = useMemo(() => htmlToText(activeFile.content), [activeFile.content]);
 
@@ -133,6 +149,11 @@ img {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [download]);
 
+  function handleSelectFile(id) {
+    selectFile(id);
+    if (window.matchMedia(MOBILE_QUERY).matches) setSidebarOpen(false);
+  }
+
   function handleDeleteFile(id) {
     const file = files.find((item) => item.id === id);
     if (!file) return;
@@ -165,7 +186,7 @@ img {
           folders={folders}
           files={files}
           activeId={activeFile.id}
-          onSelectFile={selectFile}
+          onSelectFile={handleSelectFile}
           onCreateFile={createFile}
           onCreateFolder={createFolder}
           onToggleFolder={toggleFolder}
@@ -175,6 +196,15 @@ img {
           onDeleteFolder={handleDeleteFolder}
           onRevealFolder={revealFolder}
           onCollapse={() => setSidebarOpen(false)}
+        />
+      )}
+      {sidebarOpen && (
+        <button
+          type="button"
+          className="sidebar-backdrop"
+          onClick={() => setSidebarOpen(false)}
+          aria-label="Close sidebar"
+          tabIndex={-1}
         />
       )}
       <main id="main">
